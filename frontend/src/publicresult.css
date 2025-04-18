@@ -1,0 +1,118 @@
+/* ========== 공통 (데스크탑 / 데스크탑 보기 유지) ========== */
+
+body {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: none;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.campaign-table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  font-size: 13px;
+  border: 1px solid #ddd;
+}
+
+.campaign-table th,
+.campaign-table td {
+  padding: 6px 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #ccc;
+}
+
+/* 상품명 칼럼 */
+.campaign-table td:nth-child(6) {
+  white-space: normal;
+  word-break: break-word;
+  text-align: left;
+  padding-left: 8px;
+}
+
+/* 즐겨찾기, 링크복사 버튼 공통 */
+.campaign-table td button {
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* ========== 모바일 전용 (최적화된 보기) ========== */
+@media (max-width: 768px) {
+  .campaign-table {
+    min-width: 580px;
+    font-size: 10px;
+  }
+
+  .campaign-table th,
+  .campaign-table td {
+    padding: 1px 2px;
+    font-size: 10px;
+  }
+
+  /* 즐겨찾기 버튼 */
+  .campaign-table td button {
+    font-size: 5.5px;
+    padding: 1px 2px;
+  }
+
+  /* 리뷰 칼럼 숨김 */
+  .campaign-table .col-review {
+    display: none !important;
+  }
+
+  /* 번호 칼럼 숨김 */
+  .campaign-table .col-number {
+    display: none !important;
+  }
+  
+  /* 포인트 칼럼 숨김 */
+  .campaign-table .col-point {
+    display: none !important;
+  }
+
+  /* 시간 칼럼 폭 축소 (원래보다 20% 작게) */
+  .campaign-table td:nth-child(6),
+  .campaign-table th:nth-child(6) {
+    width: 50px;
+    max-width: 50px;
+  }
+
+/* 상품명 칼럼 (모바일) */
+.campaign-table .col-title {
+  white-space: nowrap; /* 한 줄 처리 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  padding-left: 6px;
+  max-width: 230px;
+  width: 230px;
+  display: table-cell; /* ✅ block이나 -webkit-box 제거 */
+  background: transparent; /* 혹시 기본 배경이 있다면 제거 */
+}
+
+
+  /* 링크 버튼 칼럼 붙이기 + 버튼 축소 */
+  .campaign-table .col-link {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .campaign-table .col-link button {
+    font-size: 5.5px;
+    padding: 1px 3px;
+    min-width: 26px;
+  }
+}
