@@ -4,8 +4,8 @@ import "./publicresult.css";
 
 /* ───────── JSON 경로만 수정 ───────── */
 const DATA_URLS = {
-  dbg:  "https://raw.githubusercontent.com/<YOUR_ID>/<REPO>/main/public_campaigns.json",
-  gtog: "https://raw.githubusercontent.com/<YOUR_ID>/<REPO>/main/public_campaigns_gtog.json",
+  dbg:  "/public_campaigns.json",
+  gtog: "/public_campaigns_gtog.json",
 };
 
 export default function PublicResult() {
