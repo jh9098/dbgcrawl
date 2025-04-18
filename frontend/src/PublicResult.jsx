@@ -233,8 +233,7 @@ export default function PublicResult() {
               <th className="col-point">포인트</th>
               <th>시간</th>
               <th className="col-title">상품명</th>
-              <th className="col-link">링크</th>
-              <th>알람</th>
+              <th>검색어 추천</th> {/* ✅ 새 칼럼 */}
             </tr>
           </thead>
           <tbody>
@@ -256,14 +255,7 @@ export default function PublicResult() {
                 <td className="col-point">{row.point}</td>
                 <td>{row.participation_time}</td>
                 <td className="col-title">{row.title}</td>
-                <td className="col-link">
-                  <button onClick={() => handleCopy(row.url)}>복사</button>
-                </td>
-                <td>
-                  <button onClick={() => toggleAlarm(row)}>
-                    {isAlarmSet(row.csq) ? "🔕" : "🔔"}
-                  </button>
-                </td>
+                <td>{row.title.slice(0, 10)}</td>
               </tr>
             ))}
           </tbody>
