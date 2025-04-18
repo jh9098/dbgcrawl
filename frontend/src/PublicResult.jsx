@@ -255,7 +255,7 @@ export default function PublicResult() {
                 <td className="col-point">{row.point}</td>
                 <td>{row.participation_time}</td>
                 <td className="col-title">{row.title}</td>
-                <td>{row.title.slice(0, 10)}</td>
+                <td>{row.title.slice(0, 15)}</td>
               </tr>
             ))}
           </tbody>
