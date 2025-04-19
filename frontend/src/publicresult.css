@@ -42,22 +42,22 @@ body {
 /* ===== 모바일 최적화 (축소 비율 적용) ===== */
 @media (max-width: 768px) {
   html {
-    zoom: 0.7; /* 전체 축소 */
+    zoom: 0.55; /* 전체 축소 */
   }
 
   .campaign-table {
-    font-size: 10px;
+    font-size: 8px;
   }
 
   .campaign-table th,
   .campaign-table td {
-    padding: 2px 4px;
-    font-size: 9.5px;
+    padding: 1px 3px;
+    font-size: 7.5px;
   }
 
   .campaign-table td button {
-    font-size: 7.5px;
-    padding: 2px 4px;
+    font-size: 5.5px;
+    padding: 1px 3px;
   }
 
   .campaign-table .col-number,
