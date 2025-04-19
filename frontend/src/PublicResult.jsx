@@ -77,7 +77,7 @@ export default function PublicResult() {
   const toggleMall = (mall) => toggleArrayFilter(mall, mallFilter, setMallFilter, uniqueValues("mall"));
   const toggleType = (type) => toggleArrayFilter(type, typeFilter, setTypeFilter, uniqueValues("type"));
 
-  const switchSite = () => setSite(site === "dbg" ? "gtog" : "dbg");
+  const switchSite = () => setSite(site === "dbg" ? "굿투리뷰" : "또바기리뷰");
 
   const tableStyle = {
     width: "100%",
@@ -112,7 +112,7 @@ export default function PublicResult() {
   return (
     <main style={{ padding: "40px", fontFamily: "sans-serif" }}>
       <h1 style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
-        공개 캠페인 리스트
+        캠페인 리스트
       </h1>
 
       <div style={{ marginBottom: 20 }}>
@@ -138,34 +138,34 @@ export default function PublicResult() {
 
       <table border="1" cellPadding="8" style={tableStyle}>
         <colgroup>
-          <col style={{ width: "1%" }} />
+          <col style={{ width: "2%" }} />
           <col style={{ width: "54%" }} />
           <col style={{ width: "8%" }} />
           <col style={{ width: "5%" }} />
           <col style={{ width: "5%" }} />
           <col style={{ width: "3%" }} />
           <col style={{ width: "4%" }} />
+          <col style={{ width: "7%" }} />
           <col style={{ width: "8%" }} />
-          <col style={{ width: "9%" }} />
-          <col style={{ width: "3%" }} />
+          <col style={{ width: "4%" }} />
         </colgroup>
         <thead>
           <tr>
             <th style={thStyle}>번호</th>
-            <th style={thStyle}>제목</th>
-            <th style={thStyle}>리뷰</th>
+            <th style={thStyle}>상품명</th>
+            <th style={thStyle}>참여가능인원</th>
             <th
               style={{ position: "relative", cursor: "pointer" }}
               onClick={() => setMallDropdown(!mallDropdown)}
             >
-              몰 ⏷
-              {mallDropdown && renderFilterDropdown(uniqueValues("mall"), mallFilter, toggleMall, "몰")}
+              쇼핑몰 ⏷
+              {mallDropdown && renderFilterDropdown(uniqueValues("mall"), mallFilter, toggleMall, "쇼핑몰")}
             </th>
             <th
               style={{ cursor: "pointer" }}
-              onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")}
+              onClick={togglePriceSort}
             >
-              가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : ""}
+              가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : "↕️"}
             </th>
             <th style={thStyle}>포인트</th>
             <th
