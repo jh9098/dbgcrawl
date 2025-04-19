@@ -10,9 +10,9 @@ from fastapi.responses import JSONResponse
 from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi.staticfiles import StaticFiles
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # CORS 허용 (Netlify에서 호출 가능하도록)
 app.add_middleware(
