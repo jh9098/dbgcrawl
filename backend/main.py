@@ -54,7 +54,11 @@ def parse_campaigns(html: str, site: str):
             time_fmt = f"{dt:%m}월 {dt:%d}일 {dt:%H}시 {dt:%M}분"
 
             title_tag = item.select_one("p span.ctooltip")
-            title = title_tag.get_text(strip=True) if title_tag else ""
+            if title_tag and title_tag.contents:
+                title = title_tag.contents[0].strip()
+            else:
+                title = ""
+
             keyword_hint = title[:15]
             typ = item.select_one(".type_box").get_text(strip=True)
 
