@@ -37,22 +37,16 @@ async def upload_campaigns(req: Request):
     try:
         html = fetch_campaign_html(session_cookie, site)
 
-        # 🔍 디버깅용: 실제로 HTML 저장
-        with open(os.path.join(STATIC_DIR, "debug_output.html"), "w", encoding="utf-8") as f:
-            f.write(html)
+        # ✅ 1. 디버깅을 위한 HTML 반환만 하고 싶다면 아래 줄 사용 (나머지 코드 생략됨)
+        return JSONResponse(content={"html": html[:2000]})
 
-        rows = parse_campaigns(html, site)
-        print(f"✅ 캠페인 개수: {len(rows)}")
-
-        out_file = os.path.join(STATIC_DIR, f"public_campaigns{'' if site == 'dbg' else '_gtog'}.json")
-        with open(out_file, "w", encoding="utf-8") as f:
-            json.dump(rows, f, ensure_ascii=False, indent=2)
-
-        return {"status": "success", "count": len(rows)}
+        # ✅ 2. 또는 아래 코드까지 실행하고 싶다면 이 줄을 '주석 처리'
+        # with open(...)...
+        # rows = parse_campaigns(...)
+        # return {"status": "success", ...}
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
-
 
 def fetch_campaign_html(phpsessid: str, site: str) -> str:
     url = f"https://{site}.shopreview.co.kr/usr"
