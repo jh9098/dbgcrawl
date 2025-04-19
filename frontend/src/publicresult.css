@@ -42,7 +42,7 @@ body {
 /* ===== 모바일 최적화 (축소 비율 적용) ===== */
 @media (max-width: 768px) {
   html {
-    zoom: 0.7; /* 전체 축소 */
+    zoom: 0.67; /* 전체 축소 */
   }
 
   .campaign-table {
