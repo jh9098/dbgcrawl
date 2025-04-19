@@ -77,7 +77,7 @@ export default function PublicResult() {
   const toggleMall = (mall) => toggleArrayFilter(mall, mallFilter, setMallFilter, uniqueValues("mall"));
   const toggleType = (type) => toggleArrayFilter(type, typeFilter, setTypeFilter, uniqueValues("type"));
 
-  const switchSite = () => setSite(site === "dbg" ? "굿투리뷰" : "또바기리뷰");
+  const switchSite = () => setSite(site === "dbg" ? "gtog" : "dbg");
 
   const tableStyle = {
     width: "100%",
@@ -117,7 +117,7 @@ export default function PublicResult() {
 
       <div style={{ marginBottom: 20 }}>
         <button onClick={switchSite} style={{ padding: "6px 14px", fontSize: "0.95rem" }}>
-          현재 사이트: {site} (클릭 전환)
+          현재 사이트: {site === "dbg" ? "또바기리뷰" : "굿투리뷰"} (클릭 전환)
         </button>
       </div>
 
