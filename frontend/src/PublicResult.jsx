@@ -9,6 +9,8 @@ export default function PublicResult() {
   const [mallFilter, setMallFilter] = useState([]);
   const [typeFilter, setTypeFilter] = useState([]);
   const [priceSort, setPriceSort] = useState(null);
+  const [mallDropdown, setMallDropdown] = useState(false);
+  const [typeDropdown, setTypeDropdown] = useState(false);
 
   const API_BASE = "https://dbgcrawl.onrender.com";
   const DATA_URLS = {
@@ -60,7 +62,6 @@ export default function PublicResult() {
   }, [rawRows, selectedDates, mallFilter, typeFilter, priceSort]);
 
   const uniqueValues = (key) => [...new Set(rawRows.map((r) => r[key]).filter(Boolean))];
-
   const toggleArrayFilter = (value, array, setter) => {
     if (array.includes(value)) setter(array.filter((v) => v !== value));
     else setter([...array, value]);
@@ -99,28 +100,57 @@ export default function PublicResult() {
 
       <p>{status}</p>
 
-      <table border="1" cellPadding="8" style={{ width: "100%", fontSize: "0.9rem" }}>
+      <table border="1" cellPadding="8" style={{ width: "100%", fontSize: "0.9rem", position: "relative" }}>
         <thead>
           <tr>
             <th>번호</th>
             <th>제목</th>
             <th>리뷰</th>
-            <th onClick={() => null}>
-              몰 <br />
-              {uniqueValues("mall").map((mall) => (
-                <button key={mall} onClick={() => toggleMall(mall)} style={{ fontSize: "0.7rem" }}>{mall}</button>
-              ))}
+            <th
+              style={{ cursor: "pointer", position: "relative" }}
+              onClick={() => setMallDropdown(!mallDropdown)}
+            >
+              몰 ⏷
+              {mallDropdown && (
+                <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10 }}>
+                  {uniqueValues("mall").map((mall) => (
+                    <div key={mall}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={mallFilter.includes(mall)}
+                          onChange={() => toggleMall(mall)}
+                        /> {mall}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </th>
-            <th onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")}
-              style={{ cursor: "pointer" }}>
+            <th onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")} style={{ cursor: "pointer" }}>
               가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : ""}
             </th>
             <th>포인트</th>
-            <th>
-              유형 <br />
-              {uniqueValues("type").map((type) => (
-                <button key={type} onClick={() => toggleType(type)} style={{ fontSize: "0.7rem" }}>{type}</button>
-              ))}
+            <th
+              style={{ cursor: "pointer", position: "relative" }}
+              onClick={() => setTypeDropdown(!typeDropdown)}
+            >
+              유형 ⏷
+              {typeDropdown && (
+                <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10 }}>
+                  {uniqueValues("type").map((type) => (
+                    <div key={type}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={typeFilter.includes(type)}
+                          onChange={() => toggleType(type)}
+                        /> {type}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </th>
             <th>시간</th>
             <th>검색어 추천</th>
@@ -140,11 +170,7 @@ export default function PublicResult() {
               <td>{row.participation_time}</td>
               <td>{row.keyword}</td>
               <td>
-                <button
-                  onClick={() => navigator.clipboard.writeText(row.keyword)}
-                >
-                  복사
-                </button>
+                <button onClick={() => navigator.clipboard.writeText(row.keyword)}>복사</button>
               </td>
             </tr>
           ))}
