@@ -181,7 +181,7 @@ export default function PublicResult() {
                 <td className="col-point">{row.point}</td>
                 <td>{row.type}</td>
                 <td>{row.participation_time}</td>
-                <td>{row.keyword}</td>
+                <td className="col-keyword">{row.keyword}</td>
                 <td className="col-link">
                   <button onClick={() => navigator.clipboard.writeText(row.keyword)}>복사</button>
                 </td>
