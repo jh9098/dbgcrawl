@@ -1,8 +1,9 @@
+# main.py (FastAPI + HTML 업로드 기반 크롤링)
+
 import os
 import re
 import json
-import requests
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +13,6 @@ from datetime import datetime
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# CORS 허용
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,45 +21,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 저장 경로
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 os.makedirs(STATIC_DIR, exist_ok=True)
 
-@app.post("/api/upload")
-async def upload_campaigns(req: Request):
-    data = await req.json()
-    session_cookie = data.get("session_cookie")
-    site = data.get("site")
-
-    if not session_cookie or site not in ("dbg", "gtog"):
-        return JSONResponse(status_code=400, content={"error": "Invalid input"})
-
+@app.post("/api/upload-html")
+async def upload_html(file: UploadFile = File(...), site: str = Form(...)):
     try:
-        html = fetch_campaign_html(session_cookie, site)
+        html = (await file.read()).decode("utf-8")
+        rows = parse_campaigns(html, site)
 
-        # ✅ 1. 디버깅을 위한 HTML 반환만 하고 싶다면 아래 줄 사용 (나머지 코드 생략됨)
-        return JSONResponse(content={"html": html[:2000]})
+        out_file = os.path.join(STATIC_DIR, f"public_campaigns{'' if site == 'dbg' else '_gtog'}.json")
+        with open(out_file, "w", encoding="utf-8") as f:
+            json.dump(rows, f, ensure_ascii=False, indent=2)
 
-        # ✅ 2. 또는 아래 코드까지 실행하고 싶다면 이 줄을 '주석 처리'
-        # with open(...)...
-        # rows = parse_campaigns(...)
-        # return {"status": "success", ...}
+        return {"status": "success", "count": len(rows)}
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
-
-def fetch_campaign_html(phpsessid: str, site: str) -> str:
-    url = f"https://{site}.shopreview.co.kr/usr"
-    session = requests.Session()
-    session.cookies.set("PHPSESSID", phpsessid)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
-        "Referer": url
-    }
-    resp = session.get(url, headers=headers, timeout=10)
-    resp.raise_for_status()
-    return resp.text
-
 
 def parse_campaigns(html: str, site: str):
     soup = BeautifulSoup(html, "lxml")
@@ -67,7 +45,6 @@ def parse_campaigns(html: str, site: str):
     base_url = f"https://{site}.shopreview.co.kr/usr/campaign_detail?csq="
 
     items = soup.select("div.review_item")
-    print(f"🔍 리뷰 아이템 수: {len(items)}")  # 디버깅용
 
     for item in items:
         try:
