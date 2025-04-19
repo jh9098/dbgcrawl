@@ -52,8 +52,8 @@ export default function PublicResult() {
 
     if (priceSort) {
       filtered.sort((a, b) => {
-        const pa = parseInt(a.price.replace(/[^\d]/g, "")) || 0;
-        const pb = parseInt(b.price.replace(/[^\d]/g, "")) || 0;
+        const pa = parseInt(a.price.replace(/[^0-9]/g, "")) || 0;
+        const pb = parseInt(b.price.replace(/[^0-9]/g, "")) || 0;
         return priceSort === "asc" ? pa - pb : pb - pa;
       });
     }
@@ -62,14 +62,52 @@ export default function PublicResult() {
   }, [rawRows, selectedDates, mallFilter, typeFilter, priceSort]);
 
   const uniqueValues = (key) => [...new Set(rawRows.map((r) => r[key]).filter(Boolean))];
-  const toggleArrayFilter = (value, array, setter) => {
-    if (array.includes(value)) setter(array.filter((v) => v !== value));
-    else setter([...array, value]);
+
+  const toggleArrayFilter = (value, array, setter, fullList) => {
+    if (value === "전체 선택") {
+      if (array.length === fullList.length) setter([]);
+      else setter(fullList);
+    } else {
+      if (array.includes(value)) setter(array.filter((v) => v !== value));
+      else setter([...array, value]);
+    }
   };
 
   const toggleDate = (day) => toggleArrayFilter(day, selectedDates, setSelectedDates);
-  const toggleMall = (mall) => toggleArrayFilter(mall, mallFilter, setMallFilter);
-  const toggleType = (type) => toggleArrayFilter(type, typeFilter, setTypeFilter);
+  const toggleMall = (mall) => toggleArrayFilter(mall, mallFilter, setMallFilter, uniqueValues("mall"));
+  const toggleType = (type) => toggleArrayFilter(type, typeFilter, setTypeFilter, uniqueValues("type"));
+
+  const switchSite = () => setSite(site === "dbg" ? "gtog" : "dbg");
+
+  const tableStyle = {
+    width: "100%",
+    fontSize: "0.9rem",
+    tableLayout: "fixed",
+  };
+
+  const thStyle = {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
+
+  const renderFilterDropdown = (options, selected, toggleFn, title) => (
+    <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10, padding: "4px" }}>
+      {["전체 선택", ...options].map((option) => (
+        <div key={option} onClick={() => toggleFn(option)} style={{ cursor: "pointer", padding: "4px 6px" }}>
+          <label style={{ cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={option === "전체 선택" ? selected.length === options.length : selected.includes(option)}
+              readOnly
+              style={{ marginRight: 6 }}
+            />
+            {option}
+          </label>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <main style={{ padding: "40px", fontFamily: "sans-serif" }}>
@@ -78,11 +116,9 @@ export default function PublicResult() {
       </h1>
 
       <div style={{ marginBottom: 20 }}>
-        <label>사이트 선택: </label>
-        <select value={site} onChange={(e) => setSite(e.target.value)}>
-          <option value="dbg">dbg</option>
-          <option value="gtog">gtog</option>
-        </select>
+        <button onClick={switchSite} style={{ padding: "6px 14px", fontSize: "0.95rem" }}>
+          현재 사이트: {site} (클릭 전환)
+        </button>
       </div>
 
       <div style={{ marginBottom: 10 }}>
@@ -100,61 +136,48 @@ export default function PublicResult() {
 
       <p>{status}</p>
 
-      <table border="1" cellPadding="8" style={{ width: "100%", fontSize: "0.9rem", position: "relative" }}>
+      <table border="1" cellPadding="8" style={tableStyle}>
+        <colgroup>
+          <col style={{ width: "4%" }} />
+          <col style={{ width: "29%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "8%" }} />
+          <col style={{ width: "8%" }} />
+          <col style={{ width: "5%" }} />
+          <col style={{ width: "8%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "8%" }} />
+        </colgroup>
         <thead>
           <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>리뷰</th>
+            <th style={thStyle}>번호</th>
+            <th style={thStyle}>제목</th>
+            <th style={thStyle}>리뷰</th>
             <th
-              style={{ cursor: "pointer", position: "relative" }}
+              style={{ position: "relative", cursor: "pointer" }}
               onClick={() => setMallDropdown(!mallDropdown)}
             >
               몰 ⏷
-              {mallDropdown && (
-                <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10 }}>
-                  {uniqueValues("mall").map((mall) => (
-                    <div key={mall}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={mallFilter.includes(mall)}
-                          onChange={() => toggleMall(mall)}
-                        /> {mall}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {mallDropdown && renderFilterDropdown(uniqueValues("mall"), mallFilter, toggleMall, "몰")}
             </th>
-            <th onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")} style={{ cursor: "pointer" }}>
+            <th
+              style={{ cursor: "pointer" }}
+              onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")}
+            >
               가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : ""}
             </th>
-            <th>포인트</th>
+            <th style={thStyle}>포인트</th>
             <th
-              style={{ cursor: "pointer", position: "relative" }}
+              style={{ position: "relative", cursor: "pointer" }}
               onClick={() => setTypeDropdown(!typeDropdown)}
             >
               유형 ⏷
-              {typeDropdown && (
-                <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10 }}>
-                  {uniqueValues("type").map((type) => (
-                    <div key={type}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={typeFilter.includes(type)}
-                          onChange={() => toggleType(type)}
-                        /> {type}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {typeDropdown && renderFilterDropdown(uniqueValues("type"), typeFilter, toggleType, "유형")}
             </th>
-            <th>시간</th>
-            <th>검색어 추천</th>
-            <th>검색어복사</th>
+            <th style={thStyle}>시간</th>
+            <th style={thStyle}>검색어 추천</th>
+            <th style={thStyle}>검색어복사</th>
           </tr>
         </thead>
         <tbody>
