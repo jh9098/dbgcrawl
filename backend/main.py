@@ -55,7 +55,7 @@ def parse_campaigns(html: str, site: str):
 
             title_tag = item.select_one("p span.ctooltip")
             title = title_tag.get_text(strip=True) if title_tag else ""
-            keyword_hint = title[:10]
+            keyword_hint = title[:15]
             typ = item.select_one(".type_box").get_text(strip=True)
 
             point = ""
