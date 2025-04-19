@@ -143,16 +143,16 @@ export default function PublicResult() {
 
       <table border="1" cellPadding="8" style={tableStyle}>
         <colgroup>
-          <col style={{ width: "2%" }} />
-          <col style={{ width: "54%" }} />
-          <col style={{ width: "8%" }} />
           <col style={{ width: "5%" }} />
-          <col style={{ width: "5%" }} />
-          <col style={{ width: "3%" }} />
-          <col style={{ width: "4%" }} />
-          <col style={{ width: "7%" }} />
+          <col style={{ width: "21%" }} />
+          <col style={{ width: "15%" }} />
           <col style={{ width: "8%" }} />
-          <col style={{ width: "4%" }} />
+          <col style={{ width: "8%" }} />
+          <col style={{ width: "6%" }} />
+          <col style={{ width: "6%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "6%" }} />
         </colgroup>
         <thead>
           <tr>
