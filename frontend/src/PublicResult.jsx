@@ -11,6 +11,11 @@ export default function PublicResult() {
   const [priceSort, setPriceSort] = useState(null);
   const [mallDropdown, setMallDropdown] = useState(false);
   const [typeDropdown, setTypeDropdown] = useState(false);
+  const togglePriceSort = () => {
+    if (priceSort === null) setPriceSort("asc");
+    else if (priceSort === "asc") setPriceSort("desc");
+    else setPriceSort(null);
+  };
 
   const API_BASE = "https://dbgcrawl.onrender.com";
   const DATA_URLS = {
