@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./publicresult.css";
 
 export default function PublicResult() {
   const [rawRows, setRawRows] = useState([]);
