@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import NoticePopup from "./NoticePopup";
 import "./publicresult.css";
 
-/* ───────── JSON 경로만 수정 ───────── */
+const API_BASE = "https://dbgcrawl.onrender.com"; // ← 실제 배포된 주소로 교체
+
 const DATA_URLS = {
-  dbg:  "/public_campaigns.json",
-  gtog: "/public_campaigns_gtog.json",
+  dbg:  `${API_BASE}/static/public_campaigns.json`,
+  gtog: `${API_BASE}/static/public_campaigns_gtog.json`,
 };
 
 export default function PublicResult() {
