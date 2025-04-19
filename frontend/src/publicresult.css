@@ -58,6 +58,7 @@ body {
     padding: 2px 5px;
   }
 
+  /* ✅ 모바일에서 숨길 칼럼만 유지 */
   .campaign-table .col-number,
   .campaign-table .col-point,
   .campaign-table .col-review {
