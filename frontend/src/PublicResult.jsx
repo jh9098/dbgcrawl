@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 
 export default function PublicResult() {
-  const [rows, setRows] = useState([]);
+  const [rawRows, setRawRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
   const [site, setSite] = useState("dbg");
   const [status, setStatus] = useState("⏳ 불러오는 중...");
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [mallFilter, setMallFilter] = useState([]);
+  const [typeFilter, setTypeFilter] = useState([]);
+  const [priceSort, setPriceSort] = useState(null);
 
   const API_BASE = "https://dbgcrawl.onrender.com";
-
   const DATA_URLS = {
     dbg: `${API_BASE}/static/public_campaigns.json`,
     gtog: `${API_BASE}/static/public_campaigns_gtog.json`,
@@ -18,7 +22,7 @@ export default function PublicResult() {
       try {
         const res = await fetch(DATA_URLS[site]);
         const data = await res.json();
-        setRows(data);
+        setRawRows(data);
         setStatus(`✅ 총 ${data.length}건`);
       } catch (err) {
         console.error(err);
@@ -28,6 +32,43 @@ export default function PublicResult() {
 
     fetchData();
   }, [site]);
+
+  useEffect(() => {
+    const now = new Date();
+    const filtered = rawRows.filter((row) => {
+      const timeMatch = row.participation_time.match(/(\d{2})월 (\d{2})일 (\d{2})시 (\d{2})분/);
+      if (!timeMatch) return false;
+      const [_, mm, dd, hh, min] = timeMatch.map(Number);
+      const rowDate = new Date(2025, mm - 1, dd, hh, min);
+      if (rowDate <= now) return false;
+      const day = dd;
+      if (selectedDates.length && !selectedDates.includes(day)) return false;
+      if (mallFilter.length && !mallFilter.includes(row.mall)) return false;
+      if (typeFilter.length && !typeFilter.includes(row.type)) return false;
+      return true;
+    });
+
+    if (priceSort) {
+      filtered.sort((a, b) => {
+        const pa = parseInt(a.price.replace(/[^\d]/g, "")) || 0;
+        const pb = parseInt(b.price.replace(/[^\d]/g, "")) || 0;
+        return priceSort === "asc" ? pa - pb : pb - pa;
+      });
+    }
+
+    setFilteredRows(filtered);
+  }, [rawRows, selectedDates, mallFilter, typeFilter, priceSort]);
+
+  const uniqueValues = (key) => [...new Set(rawRows.map((r) => r[key]).filter(Boolean))];
+
+  const toggleArrayFilter = (value, array, setter) => {
+    if (array.includes(value)) setter(array.filter((v) => v !== value));
+    else setter([...array, value]);
+  };
+
+  const toggleDate = (day) => toggleArrayFilter(day, selectedDates, setSelectedDates);
+  const toggleMall = (mall) => toggleArrayFilter(mall, mallFilter, setMallFilter);
+  const toggleType = (type) => toggleArrayFilter(type, typeFilter, setTypeFilter);
 
   return (
     <main style={{ padding: "40px", fontFamily: "sans-serif" }}>
@@ -43,6 +84,19 @@ export default function PublicResult() {
         </select>
       </div>
 
+      <div style={{ marginBottom: 10 }}>
+        <label>날짜 필터: </label>
+        {[...Array(31)].map((_, i) => (
+          <button
+            key={i + 1}
+            style={{ marginRight: 4, background: selectedDates.includes(i + 1) ? "#4caf50" : "#ccc" }}
+            onClick={() => toggleDate(i + 1)}
+          >
+            {i + 1}일
+          </button>
+        ))}
+      </div>
+
       <p>{status}</p>
 
       <table border="1" cellPadding="8" style={{ width: "100%", fontSize: "0.9rem" }}>
@@ -51,17 +105,30 @@ export default function PublicResult() {
             <th>번호</th>
             <th>제목</th>
             <th>리뷰</th>
-            <th>몰</th>
-            <th>가격</th>
+            <th onClick={() => null}>
+              몰 <br />
+              {uniqueValues("mall").map((mall) => (
+                <button key={mall} onClick={() => toggleMall(mall)} style={{ fontSize: "0.7rem" }}>{mall}</button>
+              ))}
+            </th>
+            <th onClick={() => setPriceSort(priceSort === "asc" ? "desc" : "asc")}
+              style={{ cursor: "pointer" }}>
+              가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : ""}
+            </th>
             <th>포인트</th>
-            <th>유형</th>
+            <th>
+              유형 <br />
+              {uniqueValues("type").map((type) => (
+                <button key={type} onClick={() => toggleType(type)} style={{ fontSize: "0.7rem" }}>{type}</button>
+              ))}
+            </th>
             <th>시간</th>
             <th>검색어 추천</th>
-            <th>링크</th>
+            <th>검색어복사</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => (
+          {filteredRows.map((row, i) => (
             <tr key={row.csq}>
               <td>{i + 1}</td>
               <td>{row.title}</td>
@@ -73,9 +140,11 @@ export default function PublicResult() {
               <td>{row.participation_time}</td>
               <td>{row.keyword}</td>
               <td>
-                <a href={row.url} target="_blank" rel="noreferrer">
-                  열기
-                </a>
+                <button
+                  onClick={() => navigator.clipboard.writeText(row.keyword)}
+                >
+                  복사
+                </button>
               </td>
             </tr>
           ))}
