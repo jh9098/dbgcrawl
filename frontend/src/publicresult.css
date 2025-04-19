@@ -14,7 +14,6 @@ body {
 
 .campaign-table {
   width: 100%;
-  min-width: 960px;
   border-collapse: collapse;
   font-size: 13px;
   border: 1px solid #ddd;
@@ -40,25 +39,27 @@ body {
   font-size: 12px;
 }
 
-/* ===== 모바일 최적화 ===== */
+/* ===== 모바일 최적화 (축소 비율 적용) ===== */
 @media (max-width: 768px) {
+  html {
+    zoom: 0.7; /* 전체 축소 */
+  }
+
   .campaign-table {
-    min-width: 580px;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .campaign-table th,
   .campaign-table td {
-    padding: 3px 5px;
-    font-size: 10px;
+    padding: 2px 4px;
+    font-size: 9.5px;
   }
 
   .campaign-table td button {
-    font-size: 8px;
-    padding: 2px 5px;
+    font-size: 7.5px;
+    padding: 2px 4px;
   }
 
-  /* ✅ 모바일에서 숨길 칼럼만 유지 */
   .campaign-table .col-number,
   .campaign-table .col-point,
   .campaign-table .col-review {
@@ -66,7 +67,7 @@ body {
   }
 
   .campaign-table .col-title {
-    max-width: 200px;
+    max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -74,7 +75,7 @@ body {
 
   .campaign-table .col-link button {
     font-size: 8px;
-    min-width: 30px;
+    min-width: 28px;
     padding: 2px 5px;
   }
 }
