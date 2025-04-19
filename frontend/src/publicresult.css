@@ -1,14 +1,10 @@
-/* ========== 공통 스타일 ========== */
+/* publicresult.css */
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
   touch-action: manipulation;
-  -webkit-text-size-adjust: none;
-}
-
-html {
-  overflow-x: hidden;
 }
 
 .table-wrapper {
@@ -26,67 +22,58 @@ html {
 
 .campaign-table th,
 .campaign-table td {
-  padding: 6px 10px;
+  padding: 6px 8px;
   text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   border: 1px solid #ccc;
 }
 
 .campaign-table .col-title {
-  text-align: left;
   white-space: normal;
   word-break: break-word;
+  text-align: left;
   padding-left: 8px;
 }
 
 .campaign-table td button {
-  cursor: pointer;
   padding: 4px 8px;
   font-size: 12px;
 }
 
-/* ========== 모바일 최적화 ========== */
+/* ===== 모바일 최적화 ===== */
 @media (max-width: 768px) {
   .campaign-table {
     min-width: 580px;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .campaign-table th,
   .campaign-table td {
-    padding: 2px 4px;
+    padding: 3px 5px;
     font-size: 10px;
   }
 
   .campaign-table td button {
-    font-size: 6px;
-    padding: 2px 4px;
+    font-size: 8px;
+    padding: 2px 5px;
   }
 
   .campaign-table .col-number,
-  .campaign-table .col-review,
-  .campaign-table .col-point {
+  .campaign-table .col-point,
+  .campaign-table .col-review {
     display: none !important;
   }
 
   .campaign-table .col-title {
-    max-width: 230px;
-    width: 230px;
-    white-space: nowrap;
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .campaign-table .col-link {
-    padding-left: 2px;
-    padding-right: 2px;
+    white-space: nowrap;
   }
 
   .campaign-table .col-link button {
-    font-size: 6px;
-    padding: 2px 4px;
-    min-width: 26px;
+    font-size: 8px;
+    min-width: 30px;
+    padding: 2px 5px;
   }
 }
