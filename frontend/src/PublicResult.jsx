@@ -12,6 +12,7 @@ export default function PublicResult() {
   const [priceSort, setPriceSort] = useState(null);
   const [mallDropdown, setMallDropdown] = useState(false);
   const [typeDropdown, setTypeDropdown] = useState(false);
+
   const togglePriceSort = () => {
     if (priceSort === null) setPriceSort("asc");
     else if (priceSort === "asc") setPriceSort("desc");
@@ -85,18 +86,6 @@ export default function PublicResult() {
 
   const switchSite = () => setSite(site === "dbg" ? "gtog" : "dbg");
 
-  const tableStyle = {
-    width: "100%",
-    fontSize: "0.9rem",
-    tableLayout: "fixed",
-  };
-
-  const thStyle = {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  };
-
   const renderFilterDropdown = (options, selected, toggleFn, title) => (
     <div style={{ position: "absolute", top: "100%", left: 0, background: "white", border: "1px solid #ccc", zIndex: 10, padding: "4px" }}>
       {["전체 선택", ...options].map((option) => (
@@ -142,69 +131,50 @@ export default function PublicResult() {
 
       <p>{status}</p>
 
-      <table border="1" cellPadding="8" style={tableStyle}>
-        <colgroup>
-          <col style={{ width: "5%" }} />
-          <col style={{ width: "21%" }} />
-          <col style={{ width: "15%" }} />
-          <col style={{ width: "8%" }} />
-          <col style={{ width: "8%" }} />
-          <col style={{ width: "6%" }} />
-          <col style={{ width: "6%" }} />
-          <col style={{ width: "15%" }} />
-          <col style={{ width: "10%" }} />
-          <col style={{ width: "6%" }} />
-        </colgroup>
-        <thead>
-          <tr>
-            <th style={thStyle}>번호</th>
-            <th style={thStyle}>상품명</th>
-            <th style={thStyle}>참여가능인원</th>
-            <th
-              style={{ position: "relative", cursor: "pointer" }}
-              onClick={() => setMallDropdown(!mallDropdown)}
-            >
-              쇼핑몰 ⏷
-              {mallDropdown && renderFilterDropdown(uniqueValues("mall"), mallFilter, toggleMall, "쇼핑몰")}
-            </th>
-            <th
-              style={{ cursor: "pointer" }}
-              onClick={togglePriceSort}
-            >
-              가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : "↕️"}
-            </th>
-            <th style={thStyle}>포인트</th>
-            <th
-              style={{ position: "relative", cursor: "pointer" }}
-              onClick={() => setTypeDropdown(!typeDropdown)}
-            >
-              유형 ⏷
-              {typeDropdown && renderFilterDropdown(uniqueValues("type"), typeFilter, toggleType, "유형")}
-            </th>
-            <th style={thStyle}>시간</th>
-            <th style={thStyle}>검색어 추천</th>
-            <th style={thStyle}>검색어복사</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRows.map((row, i) => (
-            <tr key={row.csq}>
-              <td>{i + 1}</td>
-              <td>{row.title}</td>
-              <td>{row.review}</td>
-              <td>{row.mall}</td>
-              <td>{row.price}</td>
-              <td>{row.point}</td>
-              <td>{row.type}</td>
-              <td>{row.participation_time}</td>
-              <td>{row.keyword}</td>
-              <td>
-                <button onClick={() => navigator.clipboard.writeText(row.keyword)}>복사</button>
-              </td>
+      <div className="table-wrapper">
+        <table className="campaign-table">
+          <thead>
+            <tr>
+              <th className="col-number">번호</th>
+              <th className="col-title">상품명</th>
+              <th className="col-review">참여가능인원</th>
+              <th onClick={() => setMallDropdown(!mallDropdown)}>
+                쇼핑몰 ⏷
+                {mallDropdown && renderFilterDropdown(uniqueValues("mall"), mallFilter, toggleMall, "쇼핑몰")}
+              </th>
+              <th onClick={togglePriceSort}>
+                가격 {priceSort === "asc" ? "⬆️" : priceSort === "desc" ? "⬇️" : "↕️"}
+              </th>
+              <th className="col-point">포인트</th>
+              <th onClick={() => setTypeDropdown(!typeDropdown)}>
+                유형 ⏷
+                {typeDropdown && renderFilterDropdown(uniqueValues("type"), typeFilter, toggleType, "유형")}
+              </th>
+              <th>시간</th>
+              <th>검색어 추천</th>
+              <th className="col-link">검색어복사</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredRows.map((row, i) => (
+              <tr key={row.csq}>
+                <td className="col-number">{i + 1}</td>
+                <td className="col-title">{row.title}</td>
+                <td className="col-review">{row.review}</td>
+                <td>{row.mall}</td>
+                <td>{row.price}</td>
+                <td className="col-point">{row.point}</td>
+                <td>{row.type}</td>
+                <td>{row.participation_time}</td>
+                <td>{row.keyword}</td>
+                <td className="col-link">
+                  <button onClick={() => navigator.clipboard.writeText(row.keyword)}>복사</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }
