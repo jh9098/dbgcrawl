@@ -166,7 +166,7 @@ export default function PublicResult() {
                 {typeDropdown && renderFilterDropdown(uniqueValues("type"), typeFilter, toggleType, "유형")}
               </th>
               <th>시간</th>
-              <th>검색어 추천</th>
+              <th className="col-keyword">검색어추천</th>
               <th className="col-link">검색어복사</th>
             </tr>
           </thead>
