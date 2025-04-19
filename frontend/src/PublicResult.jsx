@@ -43,6 +43,21 @@ export default function PublicResult() {
   }, [site]);
 
   useEffect(() => {
+      const gaScript = document.createElement("script");
+        gaScript.setAttribute("async", "");
+        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-T2X411LZ57";
+        document.head.appendChild(gaScript);
+      
+        const gaScript2 = document.createElement("script");
+        gaScript2.innerHTML = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-T2X411LZ57');
+        `;
+        document.head.appendChild(gaScript2);
+
+
     const now = new Date();
     const filtered = rawRows.filter((row) => {
       const timeMatch = row.participation_time.match(/(\d{2})월 (\d{2})일 (\d{2})시 (\d{2})분/);
