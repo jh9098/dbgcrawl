@@ -42,7 +42,7 @@ body {
 /* ===== 모바일 최적화 (축소 비율 적용) ===== */
 @media (max-width: 768px) {
   html {
-    zoom: 0.55; /* 전체 축소 */
+    zoom: 0.65; /* 전체 축소 */
   }
 
   .campaign-table {
@@ -62,7 +62,8 @@ body {
 
   .campaign-table .col-number,
   .campaign-table .col-point,
-  .campaign-table .col-review {
+  .campaign-table .col-review,
+  .campaign-table .col-keyword {
     display: none !important;
   }
 
